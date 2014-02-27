@@ -86,10 +86,8 @@ var qa = {
 			}
 			// Clean up empty quads
 			if (!dot.qad.isInside(dot)) {
-				var qad = dot.qad;
-				qad.rmvDot(dot);
+				dot.qad.rmvDot(dot);
 				this.assign(this.rot, dot);
-				qad.par.clean();
 			}
 		}
 	},
