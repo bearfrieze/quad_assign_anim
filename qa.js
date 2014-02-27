@@ -72,7 +72,7 @@ var qa = {
 		// Collision test
 		var colliding = [];
 		for (var i = 0; i < this.dts.length; i++) {
-			colliding = this.colission(this.dts[i], colliding);
+			if (this.isColliding(this.dts[i])) colliding.push(this.dts[i]);
 		}
 		// Kill colliding dots
 		for (var i = 0; i < colliding.length; i++) {
@@ -97,15 +97,15 @@ var qa = {
 			dot.age++;
 		}
 	},
-	colission: function(dot, colliding) {
+	isColliding: function(dot) {
 		for(var i = 0; i < dot.qad.dts.length; i++) {
 			var otr = dot.qad.dts[i];
-			if (otr.id === dot.id) continue; 
+			if (otr.id === dot.id) continue;
 			var del = [dot.loc[0] - otr.loc[0], dot.loc[1] - otr.loc[1]];
 			if (Math.sqrt((del[0] * del[0]) + (del[1] * del[1])) <= dot.rad * 2)
-				colliding.push(otr);
+				return true;
 		}
-		return colliding;
+		return false;
 	},
 	kill: function(dot) {
 		for (var j = 0; j < this.dts.length; j++) {

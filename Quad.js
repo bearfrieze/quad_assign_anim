@@ -30,13 +30,12 @@ qa.Quad = function(loc, dim, par) {
 	this.rmvDot = function(dot) {
 		for (var i = 0; i < this.dts.length; i++) {
 			if(this.dts[i].id === dot.id) {
-				this.dts[i] = this.dts[this.dts.length - 1];
-				this.dts.pop();
+				this.dts.splice(i, 1);
 				dot.qad = null;
 				break;
 			}
 		}
-		this.par.clean();
+		// this.par.clean();
 	}
 	this.isInside = function(dot) {
 		if (dot.loc[0] >= this.loc[0] && dot.loc[0] <= this.loc[0] + this.dim[0])

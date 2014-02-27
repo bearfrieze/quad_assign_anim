@@ -1,4 +1,4 @@
-qa.setup(600, 2, 50, 0.5);
+qa.setup(600, 3, 50, 0.5);
 qa.drawAll();
 
 // Loop
