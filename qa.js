@@ -62,44 +62,47 @@ var qa = {
 		// Collision test
 		var colliding = [];
 		for (var i = 0; i < this.dts.length; i++) {
-			colliding = colliding.concat(this.colission(this.dts[i]));
+			colliding = this.colission(this.dts[i], colliding);
 		}
-		// Remove colliding dots
+		// Kill colliding dots
 		for (var i = 0; i < colliding.length; i++) {
-			var dot = colliding[i];
-			for (var j = 0; j < this.dts.length; j++) {
-				if (dot.id === this.dts[j].id) {
-					this.dts[j] = this.dts[this.dts.length - 1];
-					this.dts.pop();
-					break;
-				}
-			}
-			dot.qad.rmvDot(dot);
+			this.kill(colliding[i]);
+			this.spawn();
 		}
 		for (var i = 0; i < this.dts.length; i++) {
 			var dot = this.dts[i];
-			// Move the dots
+			// Move dots
 			for (var j = 0; j < 2; j++) {
+				// Reverse direction if about to fly out of bounds
 				if (dot.loc[j] + dot.vel[j] <= 0 || dot.loc[j] + dot.vel[j] >= this.siz)
 					dot.vel[j] = -dot.vel[j];
 				dot.loc[j] += dot.vel[j];
 			}
-			// Clean up empty quads
+			// Check if dot has left quad
 			if (!dot.qad.isInside(dot)) {
-				dot.qad.rmvDot(dot);
-				this.assign(this.rot, dot);
+				dot.qad.rmvDot(dot); // Clean up
+				this.assign(this.rot, dot); // Reassign dot
 			}
 		}
 	},
-	colission: function(dot) {
-		var dts = [];
+	colission: function(dot, colliding) {
 		for(var i = 0; i < dot.qad.dts.length; i++) {
 			var otr = dot.qad.dts[i];
 			if (otr.id === dot.id) continue; 
 			var del = [dot.loc[0] - otr.loc[0], dot.loc[1] - otr.loc[1]];
 			if (Math.sqrt((del[0] * del[0]) + (del[1] * del[1])) <= dot.rad * 2)
-				dts.push(otr);
+				colliding.push(otr);
 		}
-		return dts;
+		return colliding;
+	},
+	kill: function(dot) {
+		for (var j = 0; j < this.dts.length; j++) {
+			if (dot.id === this.dts[j].id) {
+				this.dts[j] = this.dts[this.dts.length - 1];
+				this.dts.pop();
+				break;
+			}
+		}
+		dot.qad.rmvDot(dot);
 	}
 };
