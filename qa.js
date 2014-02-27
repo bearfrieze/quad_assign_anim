@@ -39,28 +39,33 @@ var qa = {
 	},
 	drawAll: function() {
 		this.ctx.clearRect(0, 0, this.siz, this.siz);
-		this.drawRecursive(this.rot);
+		this.drawQuads();
+		this.drawDots();
 	},
-	drawRecursive: function(qad) {
+	drawQuads: function() {
 		this.ctx.beginPath();
-		this.ctx.rect(qad.loc[0], qad.loc[1], qad.dim[0], qad.dim[1]);
+		this.drawQuadRecursive(this.rot);
 		this.ctx.closePath();
 		this.ctx.stroke();
-		if (qad.dts.length !== 0) {
-			for (var i = 0; i < qad.dts.length; i++) {
-				var dot = qad.dts[i];
-				var hue = 120 - (dot.age / this.dts[0].age * 120);
-				this.ctx.fillStyle = 'hsl(' + hue + ', 100%, 50%)';
-				this.ctx.beginPath();
-				this.ctx.arc(Math.round(dot.loc[0]), Math.round(dot.loc[1]), dot.rad, 0, 2*Math.PI);
-				this.ctx.closePath();
-				this.ctx.stroke();
-				this.ctx.fill();
-			}
-		} else if (qad.qds !== null) {
+	},
+	drawQuadRecursive: function(qad) {
+		this.ctx.rect(qad.loc[0], qad.loc[1], qad.dim[0], qad.dim[1]);
+		if (qad.qds !== null) {
 			for (var i = 0; i < 2; i++)
 				for (var j = 0; j < 2; j++)
-					this.drawRecursive(qad.qds[i][j]);
+					this.drawQuadRecursive(qad.qds[i][j]);
+		}
+	},
+	drawDots: function() {
+		for (var i = 0; i < this.dts.length; i++) {
+			var dot = this.dts[i];
+			var hue = 120 - (dot.age / this.dts[0].age * 120);
+			this.ctx.fillStyle = 'hsl(' + hue + ', 100%, 50%)';
+			this.ctx.beginPath();
+			this.ctx.arc(Math.round(dot.loc[0]), Math.round(dot.loc[1]), dot.rad, 0, 2*Math.PI);
+			this.ctx.closePath();
+			this.ctx.stroke();
+			this.ctx.fill();
 		}
 	},
 	step: function() {
