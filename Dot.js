@@ -4,4 +4,5 @@ qa.Dot = function (id, loc, vel, rad) {
 	this.vel = vel;
 	this.rad = rad;
 	this.qad = null;
+	this.age = 0;
 };

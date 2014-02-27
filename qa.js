@@ -39,18 +39,23 @@ var qa = {
 	},
 	drawAll: function() {
 		this.ctx.clearRect(0, 0, this.siz, this.siz);
-		this.ctx.beginPath();
 		this.drawRecursive(this.rot);
-		this.ctx.closePath();
-		this.ctx.stroke();
 	},
 	drawRecursive: function(qad) {
-		this.ctx.moveTo(qad.loc[0], qad.loc[1]);
+		this.ctx.beginPath();
 		this.ctx.rect(qad.loc[0], qad.loc[1], qad.dim[0], qad.dim[1]);
+		this.ctx.closePath();
+		this.ctx.stroke();
 		if (qad.dts.length !== 0) {
 			for (var i = 0; i < qad.dts.length; i++) {
-				this.ctx.moveTo(Math.round(qad.dts[i].loc[0]) + qad.dts[i].rad, Math.round(qad.dts[i].loc[1]));
-				this.ctx.arc(Math.round(qad.dts[i].loc[0]), Math.round(qad.dts[i].loc[1]), qad.dts[i].rad, 0, 2*Math.PI);
+				var dot = qad.dts[i];
+				var hue = 120 - (dot.age / this.dts[0].age * 120);
+				this.ctx.fillStyle = 'hsl(' + hue + ', 100%, 50%)';
+				this.ctx.beginPath();
+				this.ctx.arc(Math.round(dot.loc[0]), Math.round(dot.loc[1]), dot.rad, 0, 2*Math.PI);
+				this.ctx.closePath();
+				this.ctx.stroke();
+				this.ctx.fill();
 			}
 		} else if (qad.qds !== null) {
 			for (var i = 0; i < 2; i++)
@@ -83,6 +88,8 @@ var qa = {
 				dot.qad.rmvDot(dot); // Clean up
 				this.assign(this.rot, dot); // Reassign dot
 			}
+			// Increment age
+			dot.age++;
 		}
 	},
 	colission: function(dot, colliding) {
@@ -98,8 +105,7 @@ var qa = {
 	kill: function(dot) {
 		for (var j = 0; j < this.dts.length; j++) {
 			if (dot.id === this.dts[j].id) {
-				this.dts[j] = this.dts[this.dts.length - 1];
-				this.dts.pop();
+				this.dts.splice(j, 1);
 				break;
 			}
 		}
