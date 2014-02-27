@@ -35,7 +35,7 @@ qa.Quad = function(loc, dim, par) {
 				break;
 			}
 		}
-		// this.par.clean();
+		this.par.clean();
 	}
 	this.isInside = function(dot) {
 		if (dot.loc[0] >= this.loc[0] && dot.loc[0] <= this.loc[0] + this.dim[0])
